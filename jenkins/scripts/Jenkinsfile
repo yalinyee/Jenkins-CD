@@ -1,6 +1,8 @@
-pipeline { 
+pipeline {
+
     agent any
     stages {
+        /* mvn构建*/
         stage('Build') {
             agent {
                docker {
@@ -13,28 +15,30 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
+         /* build镜像并发布到私有仓库中*/
         stage('Push') {
            agent none
     		steps {
     		  script {
     		        docker.withRegistry('https://reg.evercenter.cn', 'dockerHarbor'){
-    				docker.build('config-service:${BUILD_ID}', '-f config-service/src/main/docker/Dockerfile ./config-service').push()
-    				docker.build('discovery-service:${BUILD_ID}', '-f discovery-service/src/main/docker/Dockerfile ./discovery-service').push()
+    				docker.build('config-service:${BUILD_ID}', '-f config-service/src/main/docker/Dockerfile ./config-service').push('latest')
+                    docker.build('discovery-service:${BUILD_ID}', '-f discovery-service/src/main/docker/Dockerfile ./discovery-service').push('latest')
+                    
     			}
     		  }
     		}
         }
+         /* 部署到远程服务器上*/
         stage('Deploy') {
-            agent none
     		steps {
     		  script {
-    		      sh 'docker-compose -f /opt/seacloud_docker/docker/docker-compose.yml up -d'
+    		      sshagent(credentials: ['jenkins-root']) {
+    		        sh 'ssh -o StrictHostKeyChecking=no -l root 192.168.7.201 -p 2311 docker-compose -f /opt/docker/docker-compose.yml up -d'
+                    }
     		  }
     		}
         }
-        
-        
-        
+
     }
 
 }
