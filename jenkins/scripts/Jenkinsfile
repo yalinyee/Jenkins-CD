@@ -1,8 +1,7 @@
-pipeline {
-    
+pipeline { 
     agent any
     stages {
-        /*stage('Build') {
+        stage('Build') {
             agent {
                docker {
                   image 'maven:3-alpine'
@@ -19,27 +18,17 @@ pipeline {
     		steps {
     		  script {
     		        docker.withRegistry('https://reg.evercenter.cn', 'dockerHarbor'){
-    				docker.build('reg.evercenter.cn/seacloud/config-service:${BUILD_ID}', '-f config-service/src/main/docker/Dockerfile ./config-service').push()
-    				docker.build('reg.evercenter.cn/seacloud/discovery-service:${BUILD_ID}', '-f discovery-service/src/main/docker/Dockerfile ./discovery-service').push()
+    				docker.build('config-service:${BUILD_ID}', '-f config-service/src/main/docker/Dockerfile ./config-service').push()
+    				docker.build('discovery-service:${BUILD_ID}', '-f discovery-service/src/main/docker/Dockerfile ./discovery-service').push()
     			}
     		  }
     		}
         }
-
-        stage ('Initialize'){
-          steps{
-            sh '''
-               echo check connection
-              '''
-          }
-        }
-        */
         stage('Deploy') {
             agent none
     		steps {
     		  script {
-    		      sh 'pwd'
-    		      //sh 'docker-compose -f /opt/seacloud_docker/docker/docker-compose.yml up -d'
+    		      sh 'docker-compose -f /opt/seacloud_docker/docker/docker-compose.yml up -d'
     		  }
     		}
         }
