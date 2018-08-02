@@ -1,0 +1,17 @@
+server:
+  port: 8095
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-service:8061/eureka/
+      
+logging:
+  pattern: 
+    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+
+security:
+  oauth2:
+    resource:
+      id: user-service
+      user-info-uri: http://localhost:8060/uaa/auth
+      prefer-token-info: false

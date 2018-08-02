@@ -1,0 +1,48 @@
+server:
+  port: 8081
+  use-forward-headers: true
+  
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-service:8061/eureka/
+
+logging:
+  pattern: 
+    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+              
+zuul:
+  routes:
+    auth-server:
+      path: /login/**
+      sensitiveHeaders:
+      serviceId: auth-server
+    device-service:
+      path: /device-service/**
+      sensitiveHeaders:
+      serviceId: device-service
+#    device-service:
+#      path: /cloudbusinessservice_datasyn/**
+#      serviceId: device-service
+    library-service:
+      path: /library/**
+      sensitiveHeaders:
+      serviceId: library-service
+    user-service:
+      path: /user/**
+      sensitiveHeaders:
+      serviceId: user-service
+    statistics-service:
+      path: /statistics/**
+      sensitiveHeaders:
+      serviceId: statistics-service
+    database-service:
+      path: /database/**
+      sensitiveHeaders:
+      serviceId: database-service
+    communication-service:
+      path: /communication/**
+      sensitiveHeaders:
+      serviceId: communication-service
+  add-proxy-headers: true
+  use-forward-headers: true

@@ -1,0 +1,15 @@
+version: "2.1"
+services:
+  config-service:
+    image: reg.evercenter.cn/seacloud/config-service:latest
+    ports:
+      - "9999:9999"
+  discovery-service:
+    image: reg.evercenter.cn/seacloud/discovery-service:latest
+    depends_on:
+      config-service:
+        condition: service_healthy
+    ports:
+      - "8061:8061"
+    links:
+      - config-service
