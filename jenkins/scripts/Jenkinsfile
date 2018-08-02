@@ -20,9 +20,9 @@ pipeline {
            agent none
     		steps {
     		  script {
-    		        docker.withRegistry('https://reg.evercenter.cn', 'dockerHarbor'){
-    				docker.build('config-service:${BUILD_ID}', '-f config-service/src/main/docker/Dockerfile ./config-service').push('latest')
-                    docker.build('discovery-service:${BUILD_ID}', '-f discovery-service/src/main/docker/Dockerfile ./discovery-service').push('latest')
+    		        docker.withRegistry('https://yourgithub.com', 'dockerHarbor'){
+    				docker.build('yourgithub.com/reponame/config-service:${BUILD_ID}', '-f config-service/src/main/docker/Dockerfile ./config-service').push('latest')
+                    docker.build('yourgithub.com/reponame/discovery-service:${BUILD_ID}', '-f discovery-service/src/main/docker/Dockerfile ./discovery-service').push('latest')
                     
     			}
     		  }
