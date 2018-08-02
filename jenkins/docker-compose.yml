@@ -1,0 +1,15 @@
+version: '3'
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    image: custom-jenkins:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/jenkins_home:/var/jenkins_home
+    environment:
+      - "JENKINS_OPTS=--prefix=/jenkins"
+    ports:
+      - 8080:8080
