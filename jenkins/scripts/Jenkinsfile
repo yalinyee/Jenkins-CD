@@ -38,6 +38,20 @@ pipeline {
     		  }
     		}
         }
+        /* 删除镜像*/
+        stage('Rm Images') {
+    		steps {
+    		  script {
+    		      try {
+    		          
+    		         sh 'docker rmi -f $(docker images | awk "/your-repo/ { print $3}")'
+    		      }catch(Exception e) {
+                
+    		          
+    		      }
+    		  }
+    		}
+        }
 
     }
 
