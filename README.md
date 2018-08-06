@@ -31,41 +31,13 @@
 　Jenkins镜像中安装了docker-compose。
 
 ```
-[root@reg jenkins]# vi Dockerfile
-FROM jenkinsci/blueocean
-
-USER root
-
-RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
-    chmod +x /usr/local/bin/docker-compose
-
-RUN apk add ca-certificates wget && \
-    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://raw.githubusercontent.com/sgerrand/alpine-pkg-glibc/master/sgerrand.rsa.pub && \
-    GLIBC_VERSION='2.27-r0' && \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk && apk add glibc-${GLIBC_VERSION}.apk && \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk && apk add glibc-bin-${GLIBC_VERSION}.apk
-
+详见jenkins/Dockerfile
 ```
 
 - 编辑docker-compose.yml
 
 ```
-[root@reg jenkins]# vi docker-compose.yml
-version: '3'
-services:
-  jenkins:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    image: custom-jenkins:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/jenkins_home:/var/jenkins_home
-    environment:
-      - "JENKINS_OPTS=--prefix=/jenkins"
-    ports:
-      - 8080:8080
+详见jenkins/docker-compose.yml
 ```
 
 ### ２.3 启动Jenkins容器
