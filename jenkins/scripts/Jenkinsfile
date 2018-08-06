@@ -20,6 +20,7 @@ pipeline {
            agent none
     		steps {
     		  script {
+                    /*私有仓库登录用户名及密码配置在jenkins用户凭证(Credentials)中，凭证id是dockerHarbor*/
     		        docker.withRegistry('https://yourgithub.com', 'dockerHarbor'){
     				docker.build('yourgithub.com/reponame/config-service:${BUILD_ID}', '-f config-service/src/main/docker/Dockerfile ./config-service').push('latest')
                     docker.build('yourgithub.com/reponame/discovery-service:${BUILD_ID}', '-f discovery-service/src/main/docker/Dockerfile ./discovery-service').push('latest')
@@ -32,6 +33,7 @@ pipeline {
         stage('Deploy') {
     		steps {
     		  script {
+                  /*本机私钥配置在jenkins用户凭证(Credentials)中，凭证id是jenkins-root*/
     		      sshagent(credentials: ['jenkins-root']) {
     		        sh 'ssh -o StrictHostKeyChecking=no -l root 192.168.7.201 -p 2311 docker-compose -f /opt/docker/docker-compose.yml up -d'
                     }
