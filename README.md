@@ -207,7 +207,4 @@ pipeline {
 
 }
 ```
-
-​	
-
 [pipeline语法参考官网](https://jenkins.io/doc/book/pipeline/syntax/)
