@@ -148,63 +148,6 @@ Password：镜像私有仓库用户密码
 
 #### 4.3 编写Jenkinsfile
 
-```groovy
-pipeline {
-
-    agent any
-    stages {
-        /* mvn构建*/
-        stage('Build') {
-            agent {
-               docker {
-                  image 'maven:3-alpine'
-                   args '-v $HOME/.m2:/root/.m2'
-                   reuseNode true
-                }
-           }
-            steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
-        }
-         /* build镜像并发布到私有仓库中*/
-        stage('Push') {
-           agent none
-    		steps {
-    		  script {
-    		        /*私有仓库登录用户名及密码配置在jenkins用户凭证(Credentials)中，凭证id是dockerHarbor*/
-    		        docker.withRegistry('https://reg.evercenter.cn', 'dockerHarbor'){
-    				docker.build('reg.evercenter.cn/seacloud/auth-server:${BUILD_ID}', '-f auth-server/src/main/docker/Dockerfile ./auth-server').push('latest')                     			}
-    		  }
-    		}
-        }
-         /* 部署到远程服务器上*/
-        stage('Deploy') {
-    		steps {
-    		  script {
-    		      /*本机私钥配置在jenkins用户凭证(Credentials)中，凭证id是jenkins-root*/
-    		      sshagent(credentials: ['jenkins-root']) {
-    		        sh 'ssh -o StrictHostKeyChecking=no -l root 172.16.0.111 -p 22 docker-compose -f /opt/seacloud/docker/docker-compose.yml stop'
-    		        sh 'ssh -o StrictHostKeyChecking=no -l root 172.16.0.111 -p 22 docker-compose -f /opt/seacloud/docker/docker-compose.yml up -d'
-    		      }
-    		  }
-    		}
-        }
-        /* 删除镜像*/
-        stage('Rm Images') {
-    		steps {
-    		  script {
-    		      try {
-    		          
-    		         sh 'docker rmi -f $(docker images | awk "/seacloud/ { print $3}")'
-    		      }catch(Exception e) {
-                
-    		      }
-    		  }
-    		}
-        }
-
-    }
-
-}
+`详见jenkins/scripts/Jenkinsfile
 ```
 [pipeline语法参考官网](https://jenkins.io/doc/book/pipeline/syntax/)
