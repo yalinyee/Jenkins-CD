@@ -123,3 +123,8 @@ Password：镜像私有仓库用户密码
 `详见jenkins/scripts/Jenkinsfile
 ```
 [pipeline语法参考官网](https://jenkins.io/doc/book/pipeline/syntax/)
+
+#### 4.4发布
+`１、可以自己写个scp将docker-compose.yml上传到目标主机
+ ２、进入刚刚创建的pipeline，点击【立即构建】，就开始一建发布了
+```
